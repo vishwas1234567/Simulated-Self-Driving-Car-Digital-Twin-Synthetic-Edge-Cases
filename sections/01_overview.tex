@@ -1,0 +1,60 @@
+\section{Objectives and status}
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+\item Replay logged drives as an editable digital twin and test ``what-if'' variants of a dangerous event.
+\item Generate rare, avoidable hazards with a diffusion model and measure whether they make a learned policy safer.
+\item Build a rule-based behaviour tree (BT) that is formally checked, then compare it with a learned policy and a planner.
+\item Add trajectory optimisation, tracking control, fault injection and a sensor/brake health monitor.
+\item Export the policy to dependency-free C and measure size, latency and int8 accuracy.
+\item Document a safety argument whose claims point to measured evidence.
+\end{enumerate}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lYY}\toprule
+Item & Status & Evidence\\\midrule
+Simulator, expert, DAgger policy & \done & Sec.~\ref{sec:e1}\\
+NeRF-style twin, what-if replay & \done & Sec.~\ref{sec:e2}\\
+Diffusion edge cases (\nSeeds\ seeds) & \done & Sec.~\ref{sec:e1}\\
+BT verification (exhaustive + bounded) & \done & Sec.~\ref{sec:e3}\\
+Lattice planner, optimisation, PD tracking & \done & Sec.~\ref{sec:e4}\\
+Fault injection + monitor (5 faults) & \done & Sec.~\ref{sec:e5}\\
+C export, host latency, int8 accuracy & \done\ (host CPU only) & Sec.~\ref{sec:e6}\\
+KITTI-format dataset adapter & \done\ (unit test on synthetic file only) & Sec.~\ref{sec:e7}\\
+Behaviour tree in CARLA & \unrun & \texttt{carla\_bt.py}; Sec.~\ref{sec:planned}\\
+Real datasets (KITTI, nuScenes, Waymo) & \planned & Sec.~\ref{sec:planned}\\
+On-target microcontroller timing & \planned & Sec.~\ref{sec:planned}\\\bottomrule
+\end{tabularx}
+\caption{Status of every item. Only ``Completed'' items have results in this report.}
+\end{table}
+
+\section{System architecture}
+\begin{figure}[H]\centering
+\begin{tikzpicture}[font=\footnotesize,node distance=7mm and 8mm,
+  b/.style={draw,rounded corners=2pt,align=center,minimum height=9mm,minimum width=22mm,fill=blue!6},
+  s/.style={b,fill=orange!12},g/.style={b,fill=green!10},r/.style={b,fill=red!8},
+  a/.style={-{Stealth[length=2mm]},thick}]
+\node[s](scen){Scenario sources\\everyday prior\\diffusion generator\\dataset adapter};
+\node[b,right=of scen](sim){2-D simulator\\+ lidar\\(or NeRF twin)};
+\node[r,right=of sim](flt){Fault\\injection};
+\node[b,right=of flt](per){Perception\\+ health\\monitor};
+\node[g,below=14mm of per](bt){Behaviour tree\\(verified)};
+\node[b,left=of bt](pl){Lattice planner\\+ optimiser\\+ PD tracker};
+\node[g,left=of pl](min){min of\\accelerations};
+\node[r,left=of min](act){Actuator\\(brake fade)};
+\draw[a](scen)--(sim);\draw[a](sim)--(flt);\draw[a](flt)--(per);
+\draw[a](per)--(bt);\draw[a](per.south west)--++(0,-5mm)-|(pl.north);
+\draw[a](bt)--(pl);\draw[a](pl)--(min);
+\draw[a](bt.south)--++(0,-5mm)-|(min.south);
+\draw[a](min)--(act);\draw[a](act.north)--++(0,7mm)-|(sim.south);
+\end{tikzpicture}
+\caption{Closed loop. The BT acts as a safety supervisor: the final command is the smaller of planner and BT accelerations.}
+\end{figure}
+\paragraph{Folder structure.}
+\begin{lstlisting}[style=plain]
+sdc_project/
+  main.tex  Makefile  requirements.txt
+  sections/   01_overview ... 07_appendix.tex   (one file per topic)
+  code/       nn sim driving scenario_gen nerf2d stack datasets carla_bt embedded
+              run_experiments run_twin run_stack make_figures make_figures_stack tests paths .py
+  results/    *.json *.npz macros.tex macros_stack.tex   (generated)
+  figures/    *.pdf *.png                                 (generated)
+  logs/ build/                                            (generated)
+\end{lstlisting}

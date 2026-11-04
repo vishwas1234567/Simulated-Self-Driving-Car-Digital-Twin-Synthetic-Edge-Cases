@@ -1,0 +1,30 @@
+\section{Methodology}
+\subsection{World, sensor, scenarios}
+The ego car (4.5\,m $\times$ 1.9\,m) drives along $+x$ with longitudinal control only ($a\in[-8,3]$\,m/s$^2$, $\Delta t=0.1$\,s, 18\,s). A pedestrian waits at $y=+5.5$\,m, possibly behind a parked car, and crosses at $x=\texttt{dist}$. A 64-ray lidar ($120^\circ$, 40\,m) adds Gaussian range noise and ray dropout. A scenario is $z=(v_0,\texttt{dist},s,\tau,o,r,p_{\rm drop},\sigma)$ with $\tau$ the pedestrian's arrival offset at the lane centre relative to the ego's constant-speed arrival ($\tau\approx0$: collision course). Collision: $\mathrm{gap}=d(\text{ego rectangle},\text{pedestrian centre})-r\le 0$. Everyday data make hazards rare (15\% of $\tau$ within $\pm3$\,s); the hazard test set keeps uniformly drawn scenarios that collide if the ego does not react.
+
+\subsection{Learned policy (DAgger)}
+MLP $65\!\to\!64\!\to\!64\!\to\!1$ on min-pooled lidar, its temporal difference and speed; trained on expert labels with DAgger (rounds with expert mixing $\beta=1,0.5,0$), MSE loss, Adam.
+
+\subsection{NeRF-style spacetime twin}
+A ray with samples $r_i$, $\delta_i=r_{i+1}-r_i$ renders the expected hit range
+\begin{equation}\hat D=r_1+\sum_{i}E_i\delta_i,\quad E_i=\exp\Big(-\sum_{j\le i}\sigma_j\delta_j\Big),\qquad \frac{\partial\hat D}{\partial\sigma_k}=-\delta_k\sum_{i\ge k}E_i\delta_i .\end{equation}
+Density is $\sigma(x,y,t)=\sigma_s(x,y)+\sigma_d(x,y,t)$, each $=20\,\mathrm{softplus}(\mathrm{MLP}(\text{interpolated feature grid}))$. Querying $\sigma_d$ at $t+\Delta$ shifts the pedestrian in time; the policy is then driven closed-loop on rendered lidar.
+
+\subsection{Diffusion edge cases with guidance}
+A DDPM ($T{=}200$) on normalised $z$ minimises $\|\epsilon-\epsilon_\theta(x_t,t)\|^2$. A surrogate $g_\phi(x_t,t)$ predicts the baseline policy's normalised minimum gap; sampling uses
+\begin{equation}\tilde\epsilon=\epsilon_\theta+\lambda\sqrt{1-\bar\alpha_t}\,\nabla_{x_t}g_\phi(x_t,t),\qquad \lambda=\guidanceLam .\end{equation}
+
+\subsection{Behaviour tree and verification}
+Priority selector: (1) emergency brake $a=-a_b$; (2) brake to stop line $a=\min\!\big(a_{\rm cruise},-\mathrm{clip}(1.3\,a_{\rm req}+0.3,0,a_b)\big)$; (3) yield $a=\min(a_{\rm cruise},0)$; (4) cruise to 12\,m/s (8 near an occluder, 4 if the sensor is unhealthy, 6 if brakes are degraded). Here $a_{\rm req}=v^2/(2d)$, $d$ is the distance to a stop line before the pedestrian, and $a_b\in\{8,4\}$ the braking capability. A conflict is predicted from the pedestrian's entry/exit times with margins $(0.3,0.8)$\,s; a pedestrian waiting at the curb is assumed to start at 3.5\,m/s.
+\emph{Verification.} (a) Exhaustive: all $\treeStates$ abstract states (hazard level $\times$ occluder $\times$ sensor flag $\times$ $a_b$), running the real action code, against $\treeProps$ properties (Table~\ref{tab:tree}). (b) Bounded model check: simulate the tree with true pedestrian state on a grid of $v_0\in\{6..14\}$, \texttt{dist}, $s\in\{0.8..3.5\}$, $\tau\in[-6,6]$ (step 0.5), occluder, $r\in\{0.25,0.6,1.0\}$: $\bmcN$ scenarios. This is a finite grid, not a proof for all continuous inputs.
+
+\subsection{Lattice planner, optimisation, tracking}
+Layered dynamic programming over $(t,s,v)$ nodes (0.5\,s layers, 6\,s horizon, $a\in\{-6,-3,-1.5,0,1,2\}$) with edges rejected if the predicted pedestrian comes within 1\,m; cost per edge $\Delta t\big[(v_d-\bar v)^2+0.15a^2\big]$. The lattice path $s^{\rm lat}$ is refined by
+\begin{equation}\min_s \|s-s^{\rm lat}\|^2+\lambda_j\|\dddot s\|^2\ \ \text{s.t. } |s_k-s^{\rm lat}_k|\le0.4\,\mathrm{m},\ \lambda_j=2\!\cdot\!10^{-5},\end{equation}
+solved as a linear system then clipped to the tube. Tracking: $a=a_{\rm ref}+k_p(s_{\rm ref}-s)+k_d(v_{\rm ref}-v)$ ($k_p{=}2,k_d{=}2.5$) through a first-order actuator lag (0.25\,s). Replanning at 2\,Hz.
+
+\subsection{Fault injection and monitor}
+Faults start 1\,s before the pedestrian begins to cross: \emph{dropout} (all rays lost, 2\,s), \emph{frozen frame} (2\,s), \emph{range bias} ($\times1.25$, persistent), \emph{latency} (0.3\,s, persistent), \emph{brake fade} (decel $\ge-4$\,m/s$^2$, persistent). Monitor: sensor flagged unhealthy for 2\,s if $>30\%$ of wall rays read beyond the known wall by 1.5\,m or the frame is bit-identical to the previous one; brakes flagged degraded if achieved deceleration $<70\%$ of a hard command.
+
+\subsection{Embedded export}
+Per-tensor symmetric int8 weights $q=\mathrm{round}(W/s)$, $s=\max|W|/127$, float activations; generated C has no libraries.

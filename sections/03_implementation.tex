@@ -1,0 +1,29 @@
+\section{Implementation}
+All code is in \texttt{code/} (NumPy and Matplotlib only; Python 3.10+). Complete listings are in Appendix~\ref{app:code}.
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lY}\toprule
+File & Role\\\midrule
+\texttt{nn.py} & MLP with manual back-propagation, Adam\\
+\texttt{sim.py} & batched simulator, lidar, scenario samplers, open-loop hazard test\\
+\texttt{driving.py} & privileged expert, DAgger, evaluation\\
+\texttt{nerf2d.py} & spacetime neural field, volume rendering, twin simulator\\
+\texttt{scenario\_gen.py} & DDPM over scenarios, surrogate, guidance\\
+\texttt{stack.py} & behaviour tree, perception, monitor, fault injection, lattice planner, optimiser, tracker\\
+\texttt{embedded.py} & C export (float32/int8), host benchmark, int8 closed loop\\
+\texttt{datasets.py} & KITTI tracking labels $\to$ scenario vectors\\
+\texttt{carla\_bt.py} & same BT driving a CARLA vehicle (needs CARLA server)\\
+\texttt{run\_experiments.py}, \texttt{run\_twin.py}, \texttt{run\_stack.py} & experiments E1, E2, E3--E5\\
+\texttt{make\_figures*.py} & figures and LaTeX number macros\\
+\texttt{tests.py}, \texttt{paths.py} & smoke tests, output folders\\\bottomrule
+\end{tabularx}
+\caption{Code base.}
+\end{table}
+\paragraph{Run.}
+\begin{lstlisting}[style=plain]
+pip install -r requirements.txt
+make test       # smoke tests
+make results    # E1-E6, about 15 min on 2 CPU cores, writes results/ and logs/
+make figures    # writes figures/ and results/macros*.tex
+make pdf        # compiles this report (or upload the folder to Overleaf)
+\end{lstlisting}
+\paragraph{Design points.} Every scenario batch is vectorised, so thousands of episodes run at once; the BT is vectorised (each node returns a status array); all experiments are seeded. Perception removes the known parked car using the static map, clusters the remaining returns, and estimates pedestrian velocity by a least-squares line over the last 1\,s; with $<4$ valid samples it assumes a crossing at 1.5\,m/s (pessimistic).

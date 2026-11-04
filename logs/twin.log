@@ -1,0 +1,15 @@
+logged 10 drives -> 45184 lidar rays
+    nerf iter     0  huber loss 12.1243
+    nerf iter   500  huber loss 0.1333
+    nerf iter  1000  huber loss 0.0211
+    nerf iter  1500  huber loss 0.0067
+    nerf iter  2000  huber loss 0.0037
+    nerf iter  2500  huber loss 0.0040
+    nerf iter  3000  huber loss 0.0211
+    nerf iter  3500  huber loss 0.0172
+    nerf iter  4000  huber loss 0.0106
+    nerf iter  4500  huber loss 0.0027
+fit time 247s
+novel view: {'mae': 0.1960639169864288, 'rmse': 1.2448934694686464, 'within_half_m': 0.9666445035460993, 'ped_rays': 142, 'n_rays': 9024, 'mae_ped': 0.7659286521856602, 'within_half_m_ped': 0.8380281690140845, 'mae_static_only_on_ped': 19.976275282073697, 'mae_static_only': 0.40210743364947876}
+what-if: {'n_cfg': 52, 'outcome_agreement': 0.9615384615384616, 'collision_real': 0.19230769230769232, 'collision_twin': 0.15384615384615385, 'gap_mae': 0.0987743454549687, 'gap_corr': 0.9917683712271516, 'xfinal_mae': 0.5258559526393252, 'pass_agreement': 0.9615384615384616, 'collision_no_ped_twin': 0.3269230769230769, 'mean_gap_no_ped_twin': 1.7200233836085472}
+total 296s

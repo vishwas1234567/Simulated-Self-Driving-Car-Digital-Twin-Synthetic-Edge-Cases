@@ -1,0 +1,27 @@
+\section{Safety argument}
+Scope: the simulated pedestrian-crossing task (operational domain: straight road, one crossing pedestrian, speeds 6--14\,m/s, pedestrian speed up to 3.5\,m/s, lidar as the only sensor). This is a structured argument linking claims to the evidence above; it is \emph{not} a certified safety case, and no ISO~26262, SOTIF or UL~4600 compliance is claimed.
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lYYY}\toprule
+ID & Claim & Evidence & Residual risk\\\midrule
+G0 & The ego avoids collision with a crossing pedestrian in the stated domain & G1--G5 & see below\\
+G1 & The BT logic is well-defined and monotone in hazard & E3 exhaustive check, all properties hold & abstraction of continuous state\\
+G2 & With correct perception the BT is safe & E3: $\bmcViol$/$\bmcN$ violations; $\stackBToColl\%$ on hazards & finite grid only\\
+G3 & Lidar perception is adequate & E4: BT $\stackBTColl\%$ (100 scen.), $\btFullHz\%$ (800) vs.\ $0\%$ with true state & missed or late detections remain\\
+G4 & Sensor faults are detected and handled & E5: dropout and frozen frame roughly halved & latency, brake fade not mitigated\\
+G5 & An unverified planner cannot override the BT & E4: planner alone $\stackPlColl\%$, with supervisor $\stackPsColl\%$ & supervisor shares the perception\\
+G6 & The deployed code equals the tested policy & E6: max.\ difference \embFlerr{} (float32) & int8 changes hazard collisions\\\bottomrule
+\end{tabularx}
+\caption{Claims and evidence.}
+\end{table}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lYYY}\toprule
+ID & Hazard & Mitigation implemented & Status\\\midrule
+H1 & Collision with crossing pedestrian & BT priority levels, curb assumption, margins & mitigated, residual $\btFullHz\%$\\
+H2 & Pedestrian hidden by parked car & speed cap 8\,m/s near occluder & mitigated, not eliminated\\
+H3 & Lidar dropout / frozen output & health monitor, speed cap 4\,m/s & partly mitigated\\
+H4 & Reduced braking & detection by achieved deceleration & \textbf{open}\\
+H5 & Sensing latency & none & \textbf{open}\\
+H6 & Planner or learned-policy error & BT supervisor (min of accelerations) & mitigated for tested cases\\\bottomrule
+\end{tabularx}
+\caption{Hazard log.}
+\end{table}

@@ -1,0 +1,29 @@
+{
+ "novel_view": {
+  "mae": 0.1960639169864288,
+  "rmse": 1.2448934694686464,
+  "within_half_m": 0.9666445035460993,
+  "ped_rays": 142,
+  "n_rays": 9024,
+  "mae_ped": 0.7659286521856602,
+  "within_half_m_ped": 0.8380281690140845,
+  "mae_static_only_on_ped": 19.976275282073697,
+  "mae_static_only": 0.40210743364947876
+ },
+ "what_if": {
+  "n_cfg": 52,
+  "outcome_agreement": 0.9615384615384616,
+  "collision_real": 0.19230769230769232,
+  "collision_twin": 0.15384615384615385,
+  "gap_mae": 0.0987743454549687,
+  "gap_corr": 0.9917683712271516,
+  "xfinal_mae": 0.5258559526393252,
+  "pass_agreement": 0.9615384615384616,
+  "collision_no_ped_twin": 0.3269230769230769,
+  "mean_gap_no_ped_twin": 1.7200233836085472
+ },
+ "iters": 5000,
+ "n_logged_rays": 45184,
+ "n_drives": 10,
+ "fit_seconds": 246.53859090805054
+}

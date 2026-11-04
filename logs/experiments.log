@@ -1,0 +1,22 @@
+expert reference: {'normal': {'coll': 0.0, 'passed': 1.0, 'gap': 3.3002998401677943, 'n': 800}, 'hazard': {'coll': 0.00375, 'passed': 0.99625, 'gap': 1.5685189819528833, 'n': 800}, 'hard': {'coll': 0.004739336492890996, 'passed': 0.995260663507109, 'gap': 1.587010984401159, 'n': 633}}
+[seed 0] arm A: normal coll 0.040 | hazard coll 0.215 | hard 0.205
+[seed 1] arm A: normal coll 0.037 | hazard coll 0.200 | hard 0.193
+[seed 0] arm B: normal coll 0.049 | hazard coll 0.075 | hard 0.081
+[seed 1] arm B: normal coll 0.052 | hazard coll 0.081 | hard 0.090
+[seed 0] arm C: normal coll 0.029 | hazard coll 0.189 | hard 0.183
+[seed 1] arm C: normal coll 0.039 | hazard coll 0.188 | hard 0.182
+[seed 0] arm D: normal coll 0.050 | hazard coll 0.191 | hard 0.182
+[seed 1] arm D: normal coll 0.036 | hazard coll 0.199 | hard 0.190
+[seed 2] arm A: normal coll 0.036 | hazard coll 0.171 | hard 0.161
+[seed 3] arm A: normal coll 0.046 | hazard coll 0.198 | hard 0.190
+[seed 2] arm B: normal coll 0.031 | hazard coll 0.089 | hard 0.095
+[seed 3] arm B: normal coll 0.052 | hazard coll 0.077 | hard 0.082
+[seed 2] arm C: normal coll 0.045 | hazard coll 0.217 | hard 0.204
+[seed 3] arm C: normal coll 0.044 | hazard coll 0.205 | hard 0.191
+[seed 2] arm D: normal coll 0.044 | hazard coll 0.219 | hard 0.207
+[seed 3] arm D: normal coll 0.041 | hazard coll 0.221 | hard 0.209
+[seed 4] arm A: normal coll 0.037 | hazard coll 0.201 | hard 0.196
+[seed 4] arm B: normal coll 0.028 | hazard coll 0.089 | hard 0.096
+[seed 4] arm C: normal coll 0.044 | hazard coll 0.214 | hard 0.202
+[seed 4] arm D: normal coll 0.044 | hazard coll 0.235 | hard 0.226
+done [142, 127, 135, 135, 125]

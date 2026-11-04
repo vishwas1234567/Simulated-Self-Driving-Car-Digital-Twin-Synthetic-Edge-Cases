@@ -1,0 +1,27 @@
+\section{Extending this report}\label{app:extend}
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+\item Write the experiment as \texttt{code/run\_<name>.py}; save a JSON in \texttt{results/} via \texttt{paths.RES}.
+\item In \texttt{code/make\_figures\_stack.py} add \texttt{mac("name", value)} lines (letters only in macro names) and any figure.
+\item Copy a block in \texttt{sections/04\_experiments.tex} (setup, table, figure, observations), move the row in Table~1 and in Sec.~\ref{sec:planned} from \planned\ to \done.
+\end{enumerate}
+\paragraph{Reproducibility.} All runs are seeded; \texttt{results/} and \texttt{figures/} shipped with this folder were produced by \texttt{make results figures} in a 2-core sandbox (NumPy, Matplotlib). Latencies in E6 depend on the machine.
+
+\section{Source code}\label{app:code}
+\newcommand{\code}[3]{\subsection{\texttt{#2}}\lstinputlisting[style=py]{code/#1}\label{#3}}
+\code{paths.py}{paths.py}{c:paths}
+\code{nn.py}{nn.py}{c:nn}
+\code{sim.py}{sim.py}{c:sim}
+\code{driving.py}{driving.py}{c:driving}
+\code{scenario_gen.py}{scenario\_gen.py}{c:gen}
+\code{nerf2d.py}{nerf2d.py}{c:nerf}
+\code{stack.py}{stack.py}{c:stack}
+\code{datasets.py}{datasets.py}{c:data}
+\code{carla_bt.py}{carla\_bt.py}{c:carla}
+\code{embedded.py}{embedded.py}{c:emb}
+\code{run_experiments.py}{run\_experiments.py}{c:rune}
+\code{run_twin.py}{run\_twin.py}{c:runt}
+\code{run_stack.py}{run\_stack.py}{c:runs}
+\code{make_figures.py}{make\_figures.py}{c:mf}
+\code{make_figures_stack.py}{make\_figures\_stack.py}{c:mfs}
+\code{tests.py}{tests.py}{c:tests}
+\subsection{\texttt{Makefile}}\lstinputlisting[style=plain]{Makefile}

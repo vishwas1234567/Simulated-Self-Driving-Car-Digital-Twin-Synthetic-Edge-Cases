@@ -1,0 +1,16 @@
+tree 32 {'P1 total, within actuator limits': 32, 'P2 emergency => full brake': 32, 'P3 must-brake => brake in [-abrk,-0.3]': 32, 'P4 conflict => never accelerate': 32, 'P5 no conflict => comfortable accel': 32, 'P6 monotone in hazard level': 32}
+bmc 18000 0 []
+Lattice+opt+PD {'coll': 0.1, 'passed': 0.9, 'gap': 1.917355068344641, 'rms_track': 0.06595439897499696, 'rms_acc': 2.6777930851699323, 'jerk95': 17.304454108340554, 'jerk_lat': 20.186246418338108, 'jerk_sm': 5.967992964162113, 't_pass': 8.97444444444443}
+Lattice+opt+PD+BT supervisor {'coll': 0.02, 'passed': 0.98, 'gap': 2.4643164729675022, 'rms_track': 0.06931998253900876, 'rms_acc': 2.3975732112239956, 'jerk95': 14.217434250975398, 'jerk_lat': 19.150156412930137, 'jerk_sm': 5.751108605223081, 't_pass': 9.55714285714284}
+BT full {'coll': 0.0325, 'passed': 0.9675, 'gap': 1.8667144796050075} {'coll': 0.02375, 'passed': 0.97625, 'gap': 3.0133890494487683}
+feed-forward only 1.0 {'coll': 0.21666666666666667, 'passed': 0.7833333333333333, 'gap': 1.4976661990990965, 'rms_track': 0.06799369867134447, 'rms_acc': 2.416963151690689, 'jerk95': 13.648673458331395, 'jerk_lat': 20.14543630892678, 'jerk_sm': 5.934121609455571, 't_pass': 8.870212765957431}
+feed-forward only 0.8 {'coll': 0.2, 'passed': 0.8, 'gap': 1.3059646660273303, 'rms_track': 0.0730341569796188, 'rms_acc': 2.0564376397035, 'jerk95': 12.11456068889869, 'jerk_lat': 21.965199590583417, 'jerk_sm': 6.462931221615243, 't_pass': 8.687499999999986}
+PD + feed-forward 1.0 {'coll': 0.23333333333333334, 'passed': 0.7666666666666667, 'gap': 1.5229176114010474, 'rms_track': 0.06441926368206448, 'rms_acc': 2.6502582039026907, 'jerk95': 18.96537213934802, 'jerk_lat': 19.243951612903224, 'jerk_sm': 5.758237107769035, 't_pass': 8.721739130434768}
+PD + feed-forward 0.8 {'coll': 0.21666666666666667, 'passed': 0.7833333333333333, 'gap': 1.4844816064238653, 'rms_track': 0.0675765450958116, 'rms_acc': 2.382389263237777, 'jerk95': 16.38708980060602, 'jerk_lat': 20.321100917431192, 'jerk_sm': 6.1067186559951425, 't_pass': 8.689361702127645}
+None {'plain': {'coll': 0.03, 'passed': 0.97, 'gap': 1.8353713271953924}, 'monitor': {'coll': 0.03, 'passed': 0.97, 'gap': 1.8353713271953924}}
+dropout {'plain': {'coll': 0.08, 'passed': 0.92, 'gap': 1.6686856382500241}, 'monitor': {'coll': 0.0425, 'passed': 0.9575, 'gap': 2.262260360956276}}
+stuck {'plain': {'coll': 0.045, 'passed': 0.955, 'gap': 1.681746567897348}, 'monitor': {'coll': 0.02, 'passed': 0.98, 'gap': 2.2831237451564435}}
+bias {'plain': {'coll': 0.0175, 'passed': 0.9825, 'gap': 1.7721716089675434}, 'monitor': {'coll': 0.0175, 'passed': 0.9825, 'gap': 2.9140933094402244}}
+latency {'plain': {'coll': 0.02, 'passed': 0.98, 'gap': 2.3365845916239887}, 'monitor': {'coll': 0.015, 'passed': 0.985, 'gap': 2.5019770286546215}}
+brake {'plain': {'coll': 0.085, 'passed': 0.915, 'gap': 1.750586523644858}, 'monitor': {'coll': 0.0825, 'passed': 0.9175, 'gap': 1.7440340080430985}}
+done 95

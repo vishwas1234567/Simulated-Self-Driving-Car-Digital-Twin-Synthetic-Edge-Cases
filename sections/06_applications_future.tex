@@ -1,0 +1,36 @@
+\section{Real-world applications}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lY}\toprule
+Technique here & Industrial counterpart\\\midrule
+Spacetime field + what-if replay & neural closed-loop sensor simulation of logged drives (e.g.\ UniSim-style) for regression testing of dangerous events\\
+Guided diffusion over scenarios & adversarial and long-tail scenario generation for perception/planner training and validation\\
+Verified behaviour tree & runtime safety supervisor / fallback layer next to a learned planner (simplex architecture)\\
+Fault injection + monitor & evidence for failure-mode analyses (FMEA/FTA) and degradation strategies\\
+C export, int8 weights & deployment of small policies on automotive-grade controllers\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Experiments planned for this week}\label{sec:planned}
+None of these has results yet.
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lYYY}\toprule
+ID & Experiment & Measure & Prerequisite\\\midrule
+P1 & Run \texttt{carla\_bt.py} (BT driving a CARLA car, pedestrian crossing) & collision, min gap, comfort vs.\ this simulator & CARLA $\ge$0.9.14 server + \texttt{pip install carla} (code written, unexecuted)\\
+P2 & Fit scenario parameters from KITTI/nuScenes pedestrian tracks (\texttt{datasets.py}) and replay in the simulator & distribution of $\tau$, speed, distance vs.\ synthetic prior & dataset download\\
+P3 & Time the C policy on a Cortex-M class board & cycles, latency, RAM/flash & board + toolchain\\
+P4 & Repeat E3--E5 with 5 seeds and confidence intervals & mean $\pm$ CI for all stack tables & none\\
+P5 & Brake-fade mitigation: pre-emptive margin or online decel estimate & collisions under fade & implementation\\
+P6 & Latency compensation by state prediction & collisions under 0.3\,s latency & implementation\\
+P7 & Larger bounded model check (finer grid, perception-error bounds) & violations & none\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Future experiments, improvements and observations}
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+\item \textbf{Perception.} The gap between lidar BT ($\btFullHz\%$) and true-state BT ($0\%$ on the 800-scenario set) is the largest remaining risk. Ray spacing (about 0.7\,m at 20\,m) can miss a 0.5\,m pedestrian; try denser rays or tracking with a motion model.
+\item \textbf{Twin.} Move to 3-D camera radiance fields or Gaussian splats; add object-centric dynamic fields so that pedestrian speed and path, not only timing, can be edited.
+\item \textbf{Generator.} Guide against the BT as well as the learned policy; add an avoidability filter; extend to multi-agent trajectories.
+\item \textbf{Planner.} Longer open-loop execution between replans would test whether PD feedback matters; add lateral motion.
+\item \textbf{Embedded.} Quantise activations (full int8), measure on target.
+\item \textbf{Observations to keep tracking.} Adding timing margins alone worsened model-check results (E3); a pessimistic default velocity for unseen pedestrians costs some completion time; stack results currently use one seed and 100--400 scenarios, so small differences are not significant.
+\end{itemize}

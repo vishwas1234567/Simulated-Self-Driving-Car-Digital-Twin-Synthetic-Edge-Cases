@@ -1,0 +1,35 @@
+{
+ "params": 8449,
+ "macs": 8320,
+ "float32-O2": {
+  "ns_per_inference": 8975.7,
+  "text_bytes": 34306,
+  "data_bytes": 0
+ },
+ "float32-Os": {
+  "ns_per_inference": 8852.6,
+  "text_bytes": 34315,
+  "data_bytes": 0
+ },
+ "float32_max_abs_err_vs_numpy": 2.86102294921875e-06,
+ "int8-O2": {
+  "ns_per_inference": 9307.6,
+  "text_bytes": 9360,
+  "data_bytes": 0
+ },
+ "int8-Os": {
+  "ns_per_inference": 22757.2,
+  "text_bytes": 9406,
+  "data_bytes": 0
+ },
+ "int8_max_abs_err_vs_numpy": 5.7220458984375e-06,
+ "closed_loop_float32": {
+  "normal": 0.04125,
+  "hazard": 0.205
+ },
+ "closed_loop_int8": {
+  "normal": 0.045,
+  "hazard": 0.22125
+ },
+ "int8_vs_float_mean_abs_action_diff": 0.12175681442022324
+}
